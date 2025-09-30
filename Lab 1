@@ -1,86 +1,55 @@
-Лістинг 1.1 – Псевдокод алгоритму сортування вибором.
-Алгоритм SelectionSort (A[0..n–1])
-// Сортування масиву методом вибору
-// Вхідні дані: масив A[0..n–1] ← [41, 68, 67, 10, 7, 69, 95, 43, 98]
-// Вихідні дані: відсортований масив A[0..n–1] у неспадному порядку
-n ← 9
-for i ← 0 to n – 2 do           // зовнішній цикл
-{
-    min ← i                    
-    for j ← i + 1 to n – 1 do   // внутрішній цикл
-        if A[j] < A[min] then
-            min ← j            
-    // обмін A[i] та A[min]
-    B ← A[i]
-    A[i] ← A[min]
-    A[min] ← B
-}
-
-Лістинг 1.2 – Python-код алгоритму сортування вибором.
+1. Алгоритм сортування вибором:
 def selection_sort(arr):
     n = len(arr)
     comparisons = 0
     assignments = 0
-
-    # Зовнішній цикл ітерується по всьому списку
-    # від 0 до n-2 (n-1 проходів)
     for i in range(n - 1):
-        # Припускаємо, що поточний елемент є мінімальним
         min_index = i
-        assignments += 1 # Присвоєння змінній min_index
-    
-        # Внутрішній цикл шукає найменший елемент в решті списку
+        assignments += 1  
         for j in range(i + 1, n):
-            comparisons += 1 # Операція порівняння
+            comparisons += 1  
             if arr[j] < arr[min_index]:
                 min_index = j
-                assignments += 1 # Присвоєння змінній min_index
-        # Обмін елементів, якщо знайдено новий мінімальний
-            comparisons += 1 # Операція порівняння
-            if min_index != i:
-            # Обмін елементів
+                assignments += 1  
+                
+        if min_index != i:
             arr[i], arr[min_index] = arr[min_index], arr[i]
-            assignments += 3 # Три присвоєння при обміні
+            assignments += 3  
     return arr, comparisons, assignments
-# Приклад використання
+
 my_list = [41, 68, 67, 10, 7, 69, 95, 43, 98]
 sorted_list, comps, assigs = selection_sort(my_list.copy())
-# Використання .copy(), щоб не змінювати оригінал
 print("Оригінальний список:", my_list)
 print("Відсортований список:", sorted_list)
 print(f"Кількість порівнянь: {comps}")
 print(f"Кількість присвоєнь: {assigs}")
 
-Лістинг 1.3 – Псевдокод алгоритму сортування вставками.
-Insertion_Sort
-for j = 2 to A.length do
- key = A[j]
- i = j-1
- while (int i > 0 and A[i] > key) do
- A[i + 1] = A[i]
- i = i - 1
- end while
- A[i+1] = key
-end
+2. Алгоритм сортування вставками:
 
-Лістинг 1.4 – Python-код алгоритму сортування вставками
 def insertion_sort(arr):
     n = len(arr)
     comparisons = 0
     assignments = 0
     for i in range(1, n):
         key = arr[i]
-        assignments += 1
+        assignments += 1  
         j = i - 1
-        assignments += 1
+        assignments += 1  
         while j >= 0 and arr[j] > key:
-            comparisons += 1
+            comparisons += 1  
             arr[j + 1] = arr[j]
-            assignments += 1
+            assignments += 1  
             j -= 1
-            assignments += 1
+            assignments += 1  
         if j >= 0:
-            comparisons += 1
+            comparisons += 1  
         arr[j + 1] = key
-        assignments += 1
+        assignments += 1  
     return arr, comparisons, assignments
+
+my_list = [41, 68, 67, 10, 7, 69, 95, 43, 98]
+sorted_list, comps, assigs = insertion_sort(my_list.copy())
+print("Оригінальний список:", my_list)
+print("Відсортований список:", sorted_list)
+print(f"Кількість порівнянь: {comps}")
+print(f"Кількість присвоєнь: {assigs}")
