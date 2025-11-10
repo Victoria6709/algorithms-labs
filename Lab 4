@@ -1,0 +1,105 @@
+Лістинг 4.1.
+# --- Константа розміру таблиці ---
+M = 13
+
+# --- Список вхідних слів ---
+WORDS = ["ЛЮДИНА", "БЕЗ", "ДРУЗІВ", "ЯК", "ДЕРЕВО", "БЕЗ", "КОРІННЯ"]
+
+# --- Словник позицій букв ---
+LETTER_POSITIONS = {
+    'А': 1, 'Б': 2, 'В': 3, 'Г': 4, 'Д': 5, 'Е': 6, 'Є': 7, 'Ж': 8,
+    'З': 9, 'И': 10, 'І': 11, 'Ї': 12, 'Й': 13, 'К': 14, 'Л': 15,
+    'М': 16, 'Н': 17, 'О': 18, 'П': 19, 'Р': 20, 'С': 21, 'Т': 22,
+    'У': 23, 'Ф': 24, 'Х': 25, 'Ц': 26, 'Ч': 27, 'Ш': 28, 'Щ': 29,
+    'Ь': 30, 'Ю': 31, 'Я': 32
+}
+
+def simple_hash_from_map(key: str) -> int:
+    """
+    Хеш-функція: h(k) = (сума позицій букв) mod M.
+    Використовує пряме відображення позицій з LETTER_POSITIONS.
+    """
+    sum_of_positions = 0
+    for char in key:
+        # Отримання позиції. Якщо символ не знайдено (наприклад, не літера), повертаємо 0.
+        position = LETTER_POSITIONS.get(char.upper(), 0)
+        sum_of_positions += position
+    # Обчислення фінальної хеш-адреси
+    hash_address = sum_of_positions % M
+    return hash_address
+
+def build_open_hash_table(words: list, m: int) -> list:
+    """
+    Будує хеш-таблицю з ланцюжками (списками).
+    """
+    # 1. Ініціалізація таблиці: M порожніх ланцюжків
+    hash_table = [[] for _ in range(m)]
+
+    # 2. Обробка кожного слова
+    for word in words:
+        address = simple_hash_from_map(word)
+        # Додавання слова до відповідного ланцюжка
+        hash_table[address].append(word)
+
+    return hash_table
+
+def display_hash_table(table: list):
+    """Виводить хеш-таблицю у зручному форматі."""
+    print("\n--- Результат хешування (Таблиця M=13) ---")
+    for i, chain in enumerate(table):
+        print(f"Індекс {i:02d}: {chain}")
+
+# --- Виконання ---
+hash_table = build_open_hash_table(WORDS, M)
+display_hash_table(hash_table)
+
+Лістинг 4.2.
+# --- Константа розміру таблиці ---
+M = 13
+
+# --- Список вхідних слів ---
+WORDS = ["ЛЮДИНА", "БЕЗ", "ДРУЗІВ", "ЯК", "ДЕРЕВО", "БЕЗ", "КОРІННЯ"]
+
+# --- Словник позицій букв українського алфавіту ---
+LETTER_POSITIONS = {
+    'А': 1, 'Б': 2, 'В': 3, 'Г': 4, 'Д': 5, 'Е': 6, 'Є': 7, 'Ж': 8,
+    'З': 9, 'И': 10, 'І': 11, 'Ї': 12, 'Й': 13, 'К': 14, 'Л': 15,
+    'М': 16, 'Н': 17, 'О': 18, 'П': 19, 'Р': 20, 'С': 21, 'Т': 22,
+    'У': 23, 'Ф': 24, 'Х': 25, 'Ц': 26, 'Ч': 27, 'Ш': 28, 'Щ': 29,
+    'Ь': 30, 'Ю': 31, 'Я': 32
+}
+
+# --- Первинна хеш-функція (метод ділення) ---
+def primary_hash(key: str) -> int:
+    """h(k) = (сума позицій букв) mod M"""
+    sum_of_positions = 0
+    for char in key:
+        position = LETTER_POSITIONS.get(char.upper(), 0)
+        sum_of_positions += position
+    return sum_of_positions % M
+
+# --- Побудова закритої хеш-таблиці (лінійне дослідження) ---
+def build_closed_hash_table(words: list, m: int) -> list:
+    """Будує хеш-таблицю з відкритою адресацією"""
+    hash_table = [None] * m
+    for word in words:
+        start_address = primary_hash(word)
+        for i in range(m):
+            address = (start_address + i) % m
+            if hash_table[address] is None:
+                hash_table[address] = word
+                break
+    return hash_table
+
+# --- Виведення хеш-таблиці ---
+def display_hash_table(table: list):
+    print("\n--- Хеш-таблиця (Відкрита адресація, M=13) ---")
+    print("Індекс | Слово")
+    print("-------|-------")
+    for i, item in enumerate(table):
+        value = item if item is not None else "(NULL)"
+        print(f"{i:02d} | {value}")
+
+# --- Виконання ---
+hash_table = build_closed_hash_table(WORDS, M)
+display_hash_table(hash_table)
