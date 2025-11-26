@@ -1,2 +1,87 @@
 Алгоритм Дейкстри
+import heapq
+
+def dijkstra(graph, start):
+    # graph: словник {вершина: [(сусід, вага), ...]}
+    # start: початкова вершина
+    V = len(graph)
+    dist = {v: float('inf') for v in graph}
+    pred = {v: None for v in graph}
+    dist[start] = 0
+
+    # Пріоритетна черга (min-heap)
+    pq = [(0, start)]  # (вага, вершина)
+
+    while pq:
+        current_dist, u = heapq.heappop(pq)
+
+        # Якщо поточна відстань більша за збережену, пропускаємо
+        if current_dist > dist[u]:
+            continue
+
+        # Перебір суміжних вершин
+        for v, weight in graph[u]:
+            if dist[v] > dist[u] + weight:
+                dist[v] = dist[u] + weight
+                pred[v] = u
+                heapq.heappush(pq, (dist[v], v))
+
+    return pred, dist
+
+graph = {
+    1: [(2, 2), (3, 5), (4, 1), (7, 1)],
+    2: [(1, 2), (4, 3), (5, 8)],
+    3: [(1, 5), (4, 9), (6, 4), (7, 4), (8, 4)],
+    4: [(1, 1), (2, 3), (3, 9), (5, 9), (8, 4)],
+    5: [(2, 8), (4, 9), (6, 3)],
+    6: [(3, 4), (5, 3), (8, 1)],
+    7: [(1, 1), (3, 4), (8, 6)],
+    8: [(3, 4), (4, 4), (6, 1), (7, 6)]
+}
+
+# Запуск алгоритму
+pred, dist = dijkstra(graph, 1)
+
+# Вивід результатів
+print("Відстані від вершини 1:")
+for v in sorted(dist.keys()):
+    print(f"1 → {v}: {dist[v]}")
+
+print("\nПопередники:")
+for v in sorted(pred.keys()):
+    print(f"{v}: {pred[v]}")
+
+Алгоритм Флойда
+def floyd_warshall(W):
+    n = len(W)
+    # Копіюємо матрицю W у D
+    D = [row[:] for row in W]
+
+    # Алгоритм Флойда
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if D[i][k] + D[k][j] < D[i][j]:
+                    D[i][j] = D[i][k] + D[k][j]
+    return D
+
+INF = 999999  # для відсутніх шляхів
+W = [
+    [0, 2, 5, 1, 3, 6, 1, 5],
+    [2, 0, 7, 3, 8, 8, 11, 7],
+    [5, 7, 0, 6, 2, 5, 4, 6],
+    [1, 3, 6, 0, 8, 5, 9, 4],
+    [7, 8, 2, 8, 0, 3, 6, 4],
+    [6, 8, 4, 5, 3, 0, 7, 1],
+    [1, 10, 4, 10, 2, 5, 0, 6],
+    [5, 7, 5, 4, 4, 1, 6, 0]
+]
+
+# Виклик алгоритму
+result = floyd_warshall(W)
+
+# Вивід результату
+print("Матриця найкоротших шляхів:")
+for row in result:
+    print(row)
 
